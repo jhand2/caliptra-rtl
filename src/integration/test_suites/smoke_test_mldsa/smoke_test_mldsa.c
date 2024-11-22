@@ -30,13 +30,7 @@ volatile uint32_t intr_count = 0;
 
 volatile caliptra_intr_received_s cptra_intr_rcv = {0};
 
-
-void main() {
-    printf("----------------------------------\n");
-    printf(" Running MLDSA Smoke Test !!\n");
-    printf("----------------------------------\n");
-
-    uint32_t mldsa_msg[] = {0xafbdf91c,
+const uint32_t mldsa_msg[] = {0xafbdf91c,
 0x942b5eb7,
 0x3b7cc474,
 0xe53c0521,
@@ -55,7 +49,7 @@ void main() {
 
 
     
-uint32_t mldsa_privkey[] = {0x75A8F4C9,
+const uint32_t mldsa_privkey[] = {0x75A8F4C9,
 0x56C0D7DA,
 0x6C7FE78F,
 0xB03E722E,
@@ -1281,7 +1275,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
 0x50F09FA7};
 
 
-    uint32_t mldsa_seed[] =     {0x0a004093,
+const uint32_t mldsa_seed[] =     {0x0a004093,
 0x27d15f67,
 0x121d0737,
 0xd5e4ce3f,
@@ -1291,7 +1285,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
 0x9cf85c2d};
 
 
-    uint32_t mldsa_sign_rnd[] = {0x00000000,
+const uint32_t mldsa_sign_rnd[] = {0x00000000,
                                     0x00000000,
                                     0x00000000,
                                     0x00000000,
@@ -1301,7 +1295,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
                                     0x00000000}; //deterministic signature
 
 
-    uint32_t mldsa_sign[] = {0x89E8DA09,
+const uint32_t mldsa_sign[] = {0x89E8DA09,
 0xEDD3600C,
 0x15A06D5B,
 0x5CBCA92C,
@@ -2460,7 +2454,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
 0x242D3100}; //last byte 00
     
     
-    uint32_t mldsa_entropy[] =       {0x3401CEFA,
+const uint32_t mldsa_entropy[] =   {0x3401CEFA,
                                     0xE20A7376,
                                     0x49073AC1,
                                     0xA351E329,
@@ -2477,7 +2471,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
                                     0x49073AC1,
                                     0xA351E329};
 
-    uint32_t mldsa_pubkey[] = {0x75A8F4C9,
+const uint32_t mldsa_pubkey[] = {0x75A8F4C9,
 0x56C0D7DA,
 0x6C7FE78F,
 0xB03E722E,
@@ -3126,7 +3120,7 @@ uint32_t mldsa_privkey[] = {0x75A8F4C9,
 0x2FDD62A5,
 0xB527ED7A};
 
-uint32_t mldsa_verifyres [] = {0x89E8DA09,
+const uint32_t mldsa_verifyres [] = {0x89E8DA09,
 0xEDD3600C,
 0x15A06D5B,
 0x5CBCA92C,
@@ -3142,6 +3136,12 @@ uint32_t mldsa_verifyres [] = {0x89E8DA09,
 0x902E2CB3,
 0x25B79FD1,
 0xC6ED2197};
+
+
+void main() {
+    printf("----------------------------------\n");
+    printf(" Running MLDSA Smoke Test !!\n");
+    printf("----------------------------------\n");
 
     //Call interrupt init
     init_interrupts();
@@ -3200,21 +3200,21 @@ uint32_t mldsa_verifyres [] = {0x89E8DA09,
                           ((mldsa_verifyres[i]>>24) & 0x000000ff);
     }
 
-    // mldsa_keygen_flow(seed, sign_rnd, entropy, privkey, pubkey);
-    // mldsa_zeroize();
-    // cptra_intr_rcv.mldsa_notif = 0;
+    mldsa_keygen_flow(seed, sign_rnd, entropy, privkey, pubkey);
+    mldsa_zeroize();
+    cptra_intr_rcv.mldsa_notif = 0;
 
-    // mldsa_signing_flow(privkey, msg, entropy, sign);
-    // mldsa_zeroize();
-    // cptra_intr_rcv.mldsa_notif = 0;
+    mldsa_signing_flow(privkey, msg, entropy, sign);
+    mldsa_zeroize();
+    cptra_intr_rcv.mldsa_notif = 0;
 
     mldsa_keygen_signing_flow(seed, sign_rnd, msg, privkey, pubkey, sign);
     mldsa_zeroize();
     cptra_intr_rcv.mldsa_notif = 0;
 
-    // mldsa_verifying_flow(msg, pubkey, sign, verifyres);
-    // mldsa_zeroize();
-    // cptra_intr_rcv.mldsa_notif = 0;
+    mldsa_verifying_flow(msg, pubkey, sign, verifyres);
+    mldsa_zeroize();
+    cptra_intr_rcv.mldsa_notif = 0;
 
     printf("%c",0xff); //End the test
     
